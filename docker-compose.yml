@@ -55,6 +55,10 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3001
+      # Supabase Configuration
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      # Database Configuration
       DB_HOST: postgres
       DB_PORT: 5432
       DB_NAME: smart_volley_db
