@@ -14,6 +14,9 @@ import UploadSection from './components/UploadSection';
 import StatsTable from './components/tables/StatsTable';
 import ConfigModal from './components/modals/ConfigModal';
 import LimitModal from './components/modals/LimitModal';
+import TeamForm from './components/TeamForm';
+import TeamPage from './components/team/TeamPage';
+import TeamDetailPage from './components/team/TeamDetailPage';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -243,6 +246,30 @@ const App = () => {
             element={
               <PrivateRoute>
                 <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/teams"
+            element={
+              <PrivateRoute>
+                <TeamPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/teams/:teamId"
+            element={
+              <PrivateRoute>
+                <TeamDetailPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/team/create"
+            element={
+              <PrivateRoute>
+                <TeamForm />
               </PrivateRoute>
             }
           />

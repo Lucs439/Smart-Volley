@@ -413,4 +413,37 @@ CREATE TRIGGER update_devices_updated_at BEFORE UPDATE ON devices FOR EACH ROW E
 CREATE TRIGGER update_breeds_updated_at BEFORE UPDATE ON breeds FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_breed_metric_references_updated_at BEFORE UPDATE ON breed_metric_references FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_subscription_plans_updated_at BEFORE UPDATE ON subscription_plans FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_user_subscriptions_updated_at BEFORE UPDATE ON user_subscriptions FOR EACH ROW EXECUTE FUNCTION update_updated_at_column(); 
+CREATE TRIGGER update_user_subscriptions_updated_at BEFORE UPDATE ON user_subscriptions FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Table des joueurs
+CREATE TABLE players (
+    id SERIAL PRIMARY KEY,
+    team_id INTEGER REFERENCES teams(id) ON DELETE CASCADE,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    birth_date DATE,
+    photo_url VARCHAR(500),
+    position VARCHAR(50),
+    number INTEGER,
+    status VARCHAR(50),
+    level VARCHAR(50),
+    email VARCHAR(255),
+    phone VARCHAR(20),
+    address VARCHAR(255),
+    city VARCHAR(100),
+    postal_code VARCHAR(20),
+    license_number VARCHAR(50),
+    medical_certificate DATE,
+    insurance BOOLEAN DEFAULT FALSE,
+    notes TEXT,
+    created_by UUID REFERENCES auth.users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Index pour la table players
+CREATE INDEX idx_players_team_id ON players(team_id);
+CREATE INDEX idx_players_created_by ON players(created_by);
+
+-- Trigger pour updated_at
+CREATE TRIGGER update_players_updated_at BEFORE UPDATE ON players FOR EACH ROW EXECUTE FUNCTION update_updated_at_column(); 
