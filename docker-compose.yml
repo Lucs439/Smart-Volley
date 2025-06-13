@@ -4,34 +4,34 @@ services:
   # Base de données PostgreSQL
   postgres:
     image: postgres:15-alpine
-    container_name: paww_postgres
+    container_name: smart_volley_postgres
     environment:
-      POSTGRES_DB: paww_db
-      POSTGRES_USER: paww_user
-      POSTGRES_PASSWORD: paww_password
+      POSTGRES_DB: smart_volley_db
+      POSTGRES_USER: smart_volley_user
+      POSTGRES_PASSWORD: smart_volley_password
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U paww_user -d paww_db"]
+      test: ["CMD-SHELL", "pg_isready -U smart_volley_user -d smart_volley_db"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - paww_network
+      - smart_volley_network
     restart: unless-stopped
 
   # Base de données InfluxDB pour les métriques
   influxdb:
     image: influxdb:2.7
-    container_name: paww_influxdb
+    container_name: smart_volley_influxdb
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_ADMIN_USER:-admin}
-      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD:-paww_influx_password}
-      DOCKER_INFLUXDB_INIT_ORG: paww
-      DOCKER_INFLUXDB_INIT_BUCKET: pet_metrics
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD:-smart_volley_influx_password}
+      DOCKER_INFLUXDB_INIT_ORG: smart_volley
+      DOCKER_INFLUXDB_INIT_BUCKET: volley_metrics
       DOCKER_INFLUXDB_INIT_RETENTION: 52w
     ports:
       - "8086:8086"
@@ -43,7 +43,7 @@ services:
       timeout: 10s
       retries: 3
     networks:
-      - paww_network
+      - smart_volley_network
     restart: unless-stopped
 
   # API Backend
@@ -51,22 +51,22 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: paww_backend
+    container_name: smart_volley_backend
     environment:
       NODE_ENV: development
       PORT: 3001
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_NAME: paww_db
-      DB_USER: paww_user
-      DB_PASSWORD: paww_password
+      DB_NAME: smart_volley_db
+      DB_USER: smart_volley_user
+      DB_PASSWORD: smart_volley_password
       REDIS_HOST: redis
       REDIS_PORT: 6379
       INFLUXDB_HOST: influxdb
       INFLUXDB_PORT: 8086
       INFLUX_URL: http://influxdb:8086
       INFLUX_TOKEN: ${INFLUXDB_TOKEN}
-      INFLUX_ORG: paww
+      INFLUX_ORG: smart_volley
       REDIS_URL: redis://redis:6379
       JWT_SECRET: ${JWT_SECRET:-development_secret}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
@@ -85,7 +85,7 @@ services:
       - /app/node_modules
       - backend_logs:/app/logs
     networks:
-      - paww_network
+      - smart_volley_network
     command: npm run dev
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
@@ -97,8 +97,8 @@ services:
   # Redis pour le cache et les sessions
   redis:
     image: redis:7.2
-    container_name: paww_redis
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-paww_redis_password}
+    container_name: smart_volley_redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-smart_volley_redis_password}
     ports:
       - "6379:6379"
     volumes:
@@ -109,13 +109,13 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - paww_network
+      - smart_volley_network
     restart: unless-stopped
 
   # Adminer pour la gestion de la base de données
   adminer:
     image: adminer:latest
-    container_name: paww_adminer
+    container_name: smart_volley_adminer
     ports:
       - "8080:8080"
     depends_on:
@@ -126,7 +126,7 @@ services:
       ADMINER_DESIGN: pepa-linha
       ADMINER_PLUGINS: tables-filter tinymce
     networks:
-      - paww_network
+      - smart_volley_network
     restart: unless-stopped
 
 volumes:
@@ -137,5 +137,5 @@ volumes:
     driver: local
 
 networks:
-  paww_network:
+  smart_volley_network:
     driver: bridge 
