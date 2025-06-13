@@ -1,0 +1,18 @@
+{
+  "name": "smart-volley",
+  "version": "1.0.0",
+  "description": "Application d'analyse de volleyball",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "start": "docker-compose up",
+    "dev": "docker-compose up",
+    "build": "docker-compose build",
+    "stop": "docker-compose down"
+  },
+  "author": "Lucas Compiano",
+  "license": "MIT"
+} 
