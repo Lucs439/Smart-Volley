@@ -1,4 +1,13 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import WelcomePage from './components/auth/WelcomePage';
+import LoginForm from './components/auth/LoginForm';
+import RegisterForm from './components/auth/RegisterForm';
+import ProfilePage from './components/profile/ProfilePage';
+import HomePage from './components/home/HomePage';
+import AuthTest from './components/auth/AuthTest';
+import SettingsPage from './components/settings/SettingsPage';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import UploadSection from './components/UploadSection';
@@ -8,7 +17,28 @@ import LimitModal from './components/modals/LimitModal';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
-const SmartVolleyApp = () => {
+const PrivateRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div>Chargement...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/welcome" />;
+  }
+
+  return (
+    <div className="flex h-screen">
+      <Sidebar />
+      <main className="flex-1 overflow-y-auto">
+        {children}
+      </main>
+    </div>
+  );
+};
+
+const App = () => {
   const [activeTab, setActiveTab] = useState('Match 1');
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState('');
@@ -194,58 +224,49 @@ const SmartVolleyApp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <Sidebar />
-
-      <div className="flex-1 ml-64 flex flex-col">
-        <Header 
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          isConfigured={isConfigured}
-          setShowConfigModal={setShowConfigModal}
-          onUploadClick={() => document.getElementById('fileInput').click()}
-        />
-
-        <div className="flex-1 p-6 mt-[72px] overflow-y-auto">
-          <div className="max-w-4xl mx-auto">
-            <UploadSection 
-              isConfigured={isConfigured}
-              selectedFile={selectedFile}
-              handleFileSelect={handleFileSelect}
-              handleRemoveFile={handleRemoveFile}
-              handleUpload={handleUpload}
-              isUploading={isUploading}
-              uploadStatus={uploadStatus}
-            />
-
-            {activeTab === 'Match 1' && (
-              <StatsTable 
-                teamConfig={teamConfig}
-                isConfigured={isConfigured}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-
-      <ConfigModal 
-        showConfigModal={showConfigModal}
-        setShowConfigModal={setShowConfigModal}
-        teamConfig={teamConfig}
-        updateTeamName={updateTeamName}
-        updateTeamColor={updateTeamColor}
-        updatePlayerName={updatePlayerName}
-        updatePlayerNumber={updatePlayerNumber}
-        generateTeamNames={generateTeamNames}
-        saveConfiguration={saveConfiguration}
-      />
-
-      <LimitModal 
-        showLimitModal={showLimitModal}
-        setShowLimitModal={setShowLimitModal}
-      />
-    </div>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/welcome" element={<WelcomePage />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/test"
+            element={
+              <PrivateRoute>
+                <AuthTest />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoute>
+                <SettingsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/" element={<Navigate to="/home" />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 
-export default SmartVolleyApp;
+export default App;

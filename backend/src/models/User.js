@@ -1,109 +1,42 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../utils/database');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const User = sequelize.define('User', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
+const userSchema = new mongoose.Schema({
   email: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
+    type: String,
+    required: true,
     unique: true,
-    validate: {
-      isEmail: true
-    }
+    trim: true,
+    lowercase: true
   },
-  password_hash: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
   },
-  first_name: {
-    type: DataTypes.STRING(100),
-    allowNull: true
+  password: {
+    type: String,
+    required: true
   },
-  last_name: {
-    type: DataTypes.STRING(100),
-    allowNull: true
-  },
-  phone: {
-    type: DataTypes.STRING(20),
-    allowNull: true
-  },
-  date_of_birth: {
-    type: DataTypes.DATE,
-    allowNull: true
-  },
-  address_line1: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  address_line2: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  city: {
-    type: DataTypes.STRING(100),
-    allowNull: true
-  },
-  postal_code: {
-    type: DataTypes.STRING(20),
-    allowNull: true
-  },
-  country: {
-    type: DataTypes.STRING(100),
-    defaultValue: 'France'
-  },
-  profile_picture_url: {
-    type: DataTypes.STRING(500),
-    allowNull: true
-  },
-  email_verified: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  phone_verified: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  terms_accepted: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  privacy_policy_accepted: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  marketing_emails: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  account_status: {
-    type: DataTypes.STRING(20),
-    defaultValue: 'active'
-  },
-  subscription_status: {
-    type: DataTypes.STRING(20),
-    defaultValue: 'trial'
-  },
-  trial_ends_at: {
-    type: DataTypes.DATE,
-    allowNull: true
-  },
-  onboarding_completed: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  last_login_at: {
-    type: DataTypes.DATE,
-    allowNull: true
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
-}, {
-  tableName: 'users',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at'
 });
+
+// Hash password before saving
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+// Method to compare password
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+const User = mongoose.model('User', userSchema);
 
 module.exports = User; 
