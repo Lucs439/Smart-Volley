@@ -1,0 +1,4 @@
+2025-06-01 23:20:19,434 - simple_ai - INFO - Initializing VolleyballAnalyzer
+2025-06-01 23:20:19,442 - simple_ai - INFO - Initializing VolleyballAnalyzer
+2025-06-01 23:20:19,442 - simple_ai - INFO - Starting analysis of video: uploads/test_video.mp4
+2025-06-01 23:20:19,505 - simple_ai - ERROR - Error during video analysis: Error opening video file

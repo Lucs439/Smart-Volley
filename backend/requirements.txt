@@ -1,0 +1,14 @@
+# Core dependencies
+fastapi==0.68.0
+uvicorn==0.15.0
+python-multipart==0.0.5
+pydantic==1.8.2
+
+# Computer Vision
+opencv-python==4.8.0.74
+numpy>=1.22.2
+ultralytics==8.0.0
+
+# Utils
+aiofiles==23.2.1
+python-dotenv==1.0.0

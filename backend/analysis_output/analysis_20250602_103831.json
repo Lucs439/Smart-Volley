@@ -1,0 +1,42 @@
+{
+  "video_path": "uploads/20250602_103830_Test qui marche.mp4",
+  "fps": 25,
+  "total_frames": 165,
+  "detections": [
+    {
+      "frame": 0,
+      "time": 0.0,
+      "people_count": 12
+    },
+    {
+      "frame": 30,
+      "time": 1.2,
+      "people_count": 14
+    },
+    {
+      "frame": 60,
+      "time": 2.4,
+      "people_count": 17
+    },
+    {
+      "frame": 90,
+      "time": 3.6,
+      "people_count": 21
+    },
+    {
+      "frame": 120,
+      "time": 4.8,
+      "people_count": 18
+    },
+    {
+      "frame": 150,
+      "time": 6.0,
+      "people_count": 17
+    }
+  ],
+  "summary": {
+    "average_players_detected": 16.5,
+    "analysis_duration": 6.6,
+    "frames_analyzed": 6
+  }
+}

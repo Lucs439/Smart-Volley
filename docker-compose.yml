@@ -1,0 +1,141 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: paww_postgres
+    environment:
+      POSTGRES_DB: paww_db
+      POSTGRES_USER: paww_user
+      POSTGRES_PASSWORD: paww_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paww_user -d paww_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - paww_network
+    restart: unless-stopped
+
+  # Base de données InfluxDB pour les métriques
+  influxdb:
+    image: influxdb:2.7
+    container_name: paww_influxdb
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_ADMIN_USER:-admin}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD:-paww_influx_password}
+      DOCKER_INFLUXDB_INIT_ORG: paww
+      DOCKER_INFLUXDB_INIT_BUCKET: pet_metrics
+      DOCKER_INFLUXDB_INIT_RETENTION: 52w
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - paww_network
+    restart: unless-stopped
+
+  # API Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: paww_backend
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: paww_db
+      DB_USER: paww_user
+      DB_PASSWORD: paww_password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      INFLUXDB_HOST: influxdb
+      INFLUXDB_PORT: 8086
+      INFLUX_URL: http://influxdb:8086
+      INFLUX_TOKEN: ${INFLUXDB_TOKEN}
+      INFLUX_ORG: paww
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-development_secret}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      influxdb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - backend_logs:/app/logs
+    networks:
+      - paww_network
+    command: npm run dev
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Redis pour le cache et les sessions
+  redis:
+    image: redis:7.2
+    container_name: paww_redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-paww_redis_password}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - paww_network
+    restart: unless-stopped
+
+  # Adminer pour la gestion de la base de données
+  adminer:
+    image: adminer:latest
+    container_name: paww_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: pepa-linha
+      ADMINER_PLUGINS: tables-filter tinymce
+    networks:
+      - paww_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  influxdb_data:
+  redis_data:
+  backend_logs:
+    driver: local
+
+networks:
+  paww_network:
+    driver: bridge 
