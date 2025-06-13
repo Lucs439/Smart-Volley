@@ -1,13 +1,19 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import LogoSvg from "../../assets/icons/Logo.svg";
-import { HouseLine, UserCircleGear, SlidersHorizontal } from "phosphor-react";
+import { HouseLine, UserCircleGear, SlidersHorizontal, Users } from "phosphor-react";
 
 const links = [
   {
     to: '/home',
     icon: HouseLine,
     label: 'Home',
+    style: (selected) => ({ size: 28, weight: selected ? "fill" : "regular" }),
+  },
+  {
+    to: '/teams',
+    icon: Users,
+    label: 'Équipes',
     style: (selected) => ({ size: 28, weight: selected ? "fill" : "regular" }),
   },
   {
