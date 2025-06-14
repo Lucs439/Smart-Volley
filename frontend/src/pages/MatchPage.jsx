@@ -12,6 +12,10 @@ const MatchPage = () => {
   const [filterOpponent, setFilterOpponent] = useState('');
   const [filterStart, setFilterStart] = useState('');
   const [filterEnd, setFilterEnd] = useState('');
+  const [pendingTeamId, setPendingTeamId] = useState('');
+  const [pendingOpponent, setPendingOpponent] = useState('');
+  const [pendingStart, setPendingStart] = useState('');
+  const [pendingEnd, setPendingEnd] = useState('');
 
   useEffect(() => {
     fetchUserTeams();
@@ -69,6 +73,14 @@ const MatchPage = () => {
     if (!error) fetchMatches();
   };
 
+  // Synchroniser les valeurs temporaires avec les filtres actifs
+  useEffect(() => {
+    setPendingTeamId(filterTeamId);
+    setPendingOpponent(filterOpponent);
+    setPendingStart(filterStart);
+    setPendingEnd(filterEnd);
+  }, [filterTeamId, filterOpponent, filterStart, filterEnd]);
+
   if (loading) return <div className="p-4">Chargement...</div>;
   if (error) return <div className="p-4 text-red-500">Erreur: {error}</div>;
 
@@ -88,8 +100,8 @@ const MatchPage = () => {
         <div>
           <label className="block text-sm font-medium mb-1">Équipe du coach</label>
           <select
-            value={filterTeamId}
-            onChange={e => setFilterTeamId(e.target.value)}
+            value={pendingTeamId}
+            onChange={e => setPendingTeamId(e.target.value)}
             className="border rounded px-3 py-2"
           >
             <option value="">Toutes</option>
@@ -102,8 +114,8 @@ const MatchPage = () => {
           <label className="block text-sm font-medium mb-1">Équipe adverse</label>
           <input
             type="text"
-            value={filterOpponent}
-            onChange={e => setFilterOpponent(e.target.value)}
+            value={pendingOpponent}
+            onChange={e => setPendingOpponent(e.target.value)}
             className="border rounded px-3 py-2"
             placeholder="Nom adversaire"
           />
@@ -112,8 +124,8 @@ const MatchPage = () => {
           <label className="block text-sm font-medium mb-1">Début</label>
           <input
             type="date"
-            value={filterStart}
-            onChange={e => setFilterStart(e.target.value)}
+            value={pendingStart}
+            onChange={e => setPendingStart(e.target.value)}
             className="border rounded px-3 py-2"
           />
         </div>
@@ -121,11 +133,37 @@ const MatchPage = () => {
           <label className="block text-sm font-medium mb-1">Fin</label>
           <input
             type="date"
-            value={filterEnd}
-            onChange={e => setFilterEnd(e.target.value)}
+            value={pendingEnd}
+            onChange={e => setPendingEnd(e.target.value)}
             className="border rounded px-3 py-2"
           />
         </div>
+        <button
+          onClick={() => {
+            setPendingTeamId('');
+            setPendingOpponent('');
+            setPendingStart('');
+            setPendingEnd('');
+            setFilterTeamId('');
+            setFilterOpponent('');
+            setFilterStart('');
+            setFilterEnd('');
+          }}
+          className="btn-secondary h-10 px-4"
+        >
+          Effacer les filtres
+        </button>
+        <button
+          onClick={() => {
+            setFilterTeamId(pendingTeamId);
+            setFilterOpponent(pendingOpponent);
+            setFilterStart(pendingStart);
+            setFilterEnd(pendingEnd);
+          }}
+          className="btn-primary h-10 px-4"
+        >
+          Appliquer
+        </button>
       </div>
       <div className="grid gap-4">
         {matches.length === 0 ? (

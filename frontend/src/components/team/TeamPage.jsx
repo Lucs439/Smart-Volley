@@ -51,17 +51,17 @@ const TeamPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 pl-72">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 px-4 sm:px-6 lg:px-8 py-8">
       <div className="max-w-7xl mx-auto">
         {/* Header avec bouton de création */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Mes équipes</h1>
-            <p className="text-gray-600 mt-1">Gérez vos équipes de volleyball</p>
+            <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Mes équipes</h1>
+            <p className="text-neutral-600 dark:text-neutral-400 mt-1">Gérez vos équipes de volleyball</p>
           </div>
           <button
             onClick={() => setShowForm(true)}
-            className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 font-medium shadow-lg shadow-blue-500/25"
+            className="btn-primary shadow-lg shadow-primary-500/10"
           >
             Créer une équipe
           </button>
@@ -90,22 +90,22 @@ const TeamPage = () => {
               <Link
                 key={team.id}
                 to={`/teams/${team.id}`}
-                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-200"
+                className="card p-6 hover:shadow-lg transition-shadow duration-200"
               >
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-semibold text-gray-900">{team.name}</h3>
-                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                  <h3 className="text-xl font-semibold text-neutral-900 dark:text-white">{team.name}</h3>
+                  <span className="px-3 py-1 bg-primary-100 text-primary-800 dark:bg-primary-900/20 dark:text-primary-300 rounded-full text-sm font-medium">
                     {team.federation}
                   </span>
                 </div>
-                <div className="space-y-2 text-gray-600">
+                <div className="space-y-2 text-neutral-600 dark:text-neutral-400">
                   <p><span className="font-medium">Niveau:</span> {team.level || 'Non spécifié'}</p>
                   <p><span className="font-medium">Catégorie:</span> {team.category || 'Non spécifiée'}</p>
                   <p><span className="font-medium">Genre:</span> {team.gender || 'Non spécifié'}</p>
                   <p><span className="font-medium">Saison:</span> {team.season}</p>
                 </div>
                 {team.description && (
-                  <p className="mt-4 text-gray-600 text-sm">{team.description}</p>
+                  <p className="mt-4 text-neutral-500 dark:text-neutral-400 text-sm">{team.description}</p>
                 )}
               </Link>
             ))}

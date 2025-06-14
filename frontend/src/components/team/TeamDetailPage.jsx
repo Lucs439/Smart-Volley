@@ -413,198 +413,209 @@ const TeamDetailPage = () => {
     XLSX.writeFile(wb, `joueurs_${team?.name || 'equipe'}.xlsx`);
   };
 
-  if (loading) return <div className="min-h-screen bg-gray-50 pl-72 flex items-center justify-center">Chargement...</div>;
-  if (error) return <div className="min-h-screen bg-gray-50 pl-72 p-6 text-red-600">Erreur: {error}</div>;
-  if (!team) return <div className="min-h-screen bg-gray-50 pl-72 p-6">Équipe non trouvée</div>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
+          {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 pl-72">
-      <div className="max-w-7xl mx-auto p-6">
-        {/* Header de l'équipe */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">{team.name}</h1>
-              <div className="space-y-1 text-gray-600">
-                <p><span className="font-medium">Niveau:</span> {team.level || 'Non spécifié'}</p>
-                <p><span className="font-medium">Catégorie:</span> {team.category || 'Non spécifiée'}</p>
-                <p><span className="font-medium">Genre:</span> {team.gender || 'Non spécifié'}</p>
-                <p><span className="font-medium">Saison:</span> {team.season}</p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="relative">
-                <button
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
-                  onClick={() => setShowImportMenu(!showImportMenu)}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                  Gérer les données
-                </button>
-                {showImportMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-10">
-                    <button
-                      className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                      onClick={handleImportClick}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                      </svg>
-                      Importer
-                    </button>
-                    <button
-                      className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                      onClick={handleExportPlayers}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                      Exporter
-                    </button>
-                    <button
-                      className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                      onClick={() => {
-                        downloadTemplate();
-                        setShowImportMenu(false);
-                      }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-                      </svg>
-                      Télécharger un template
-                    </button>
-                  </div>
-                )}
-              </div>
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="text-red-600 hover:text-red-800 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors"
-              >
-                Supprimer l'équipe
-              </button>
-            </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* En-tête de l'équipe */}
+      <div className="mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">{team?.name}</h1>
+            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+              {team?.description || 'Aucune description'}
+            </p>
           </div>
-        </div>
-
-        {/* Liste des joueurs */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Joueurs</h2>
+          <div className="flex flex-wrap gap-3">
             <button
               onClick={() => setShowPlayerForm(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="btn-primary"
             >
               Ajouter un joueur
             </button>
-          </div>
-          {players.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">Aucun joueur dans cette équipe</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full">
-                <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 cursor-pointer" onClick={() => handleSort('photo_url')}>Photo</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 cursor-pointer" onClick={() => handleSort('last_name')}>Nom</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 cursor-pointer" onClick={() => handleSort('first_name')}>Prénom</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 cursor-pointer" onClick={() => handleSort('position')}>Poste</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedPlayers.map(player => (
-                    <tr key={player.id} className="border-b border-gray-100 hover:bg-gray-50">
-                      <td className="py-3 px-4">
-                        {player.photo_url ? (
-                          <img
-                            src={player.photo_url}
-                            alt={`${player.first_name} ${player.last_name}`}
-                            className="w-10 h-10 rounded-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                            <span className="text-gray-500 text-sm">
-                              {player.first_name?.[0]}{player.last_name?.[0]}
-                            </span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-gray-900">{player.last_name}</td>
-                      <td className="py-3 px-4 text-gray-900">{player.first_name}</td>
-                      <td className="py-3 px-4 text-gray-900">{player.position}</td>
-                      <td className="py-3 px-4">
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleEditPlayer(player)}
-                            className="text-blue-600 hover:text-blue-800"
-                          >
-                            Modifier
-                          </button>
-                          <button
-                            onClick={() => handleDeletePlayer(player.id)}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            ×
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="relative">
+              <button
+                onClick={() => setShowImportMenu(!showImportMenu)}
+                className="btn-secondary"
+              >
+                Importer
+              </button>
+              {showImportMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 py-1 z-10">
+                  <button
+                    onClick={handleImportClick}
+                    className="w-full px-4 py-2 text-left text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                  >
+                    Importer depuis Excel
+                  </button>
+                  <button
+                    onClick={downloadTemplate}
+                    className="w-full px-4 py-2 text-left text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                  >
+                    Télécharger le template
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="btn-secondary text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
+              Supprimer l'équipe
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Modal du formulaire de joueur */}
-      {showPlayerForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  {editingPlayer ? 'Modifier le joueur' : 'Ajouter un joueur'}
-                </h2>
-                <button
-                  onClick={handlePlayerFormClose}
-                  className="text-gray-400 hover:text-gray-600"
+      {/* Liste des joueurs */}
+      <div className="card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+            <thead className="bg-neutral-50 dark:bg-neutral-800/50">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider cursor-pointer"
+                  onClick={() => handleSort('first_name')}
                 >
-                  ×
-                </button>
-              </div>
+                  Nom
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider cursor-pointer"
+                  onClick={() => handleSort('position')}
+                >
+                  Poste
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                >
+                  Contact
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider"
+                >
+                  Statut
+                </th>
+                <th scope="col" className="relative px-6 py-3">
+                  <span className="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700">
+              {players.map((player) => (
+                <tr key={player.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-700/50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div>
+                        <div className="text-sm font-medium text-neutral-900 dark:text-white">
+                          {player.first_name} {player.last_name}
+                        </div>
+                        <div className="text-sm text-neutral-500 dark:text-neutral-400">
+                          {player.email}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-neutral-900 dark:text-white">{player.position}</div>
+                    {player.secondary_position && (
+                      <div className="text-sm text-neutral-500 dark:text-neutral-400">
+                        {player.secondary_position}
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-neutral-900 dark:text-white">{player.phone}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      player.status === 'available'
+                        ? 'bg-accent-green/10 text-accent-green'
+                        : player.status === 'injured'
+                        ? 'bg-red-100 text-red-600 dark:bg-red-900/20 dark:text-red-400'
+                        : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300'
+                    }`}>
+                      {player.status === 'available' ? 'Disponible' : player.status === 'injured' ? 'Blessé' : 'Absent'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button
+                      onClick={() => handleEditPlayer(player)}
+                      className="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300 mr-4"
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      onClick={() => handleDeletePlayer(player.id)}
+                      className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Formulaire d'ajout/modification de joueur */}
+      {showPlayerForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-4">
+                {editingPlayer ? 'Modifier le joueur' : 'Ajouter un joueur'}
+              </h2>
               <PlayerForm
                 onSubmit={handlePlayerFormSubmit}
-                initialData={editingPlayer}
                 onCancel={handlePlayerFormClose}
+                initialData={editingPlayer}
               />
             </div>
           </div>
         </div>
       )}
 
-      {/* Modal de confirmation de suppression */}
+      {/* Confirmation de suppression */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl w-full max-w-md p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-xl max-w-md w-full p-6">
+            <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-4">
               Supprimer l'équipe
             </h2>
-            <p className="text-gray-600 mb-6">
-              Êtes-vous sûr de vouloir supprimer cette équipe ? Cette action est irréversible et vous perdrez toutes les informations associées.
+            <p className="text-neutral-600 dark:text-neutral-400 mb-6">
+              Êtes-vous sûr de vouloir supprimer cette équipe ? Cette action est irréversible.
             </p>
-            <div className="flex justify-end space-x-4">
+            <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                className="btn-secondary"
               >
                 Annuler
               </button>
               <button
                 onClick={handleDeleteTeam}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                className="btn-primary bg-red-600 hover:bg-red-700 active:bg-red-800"
               >
                 Supprimer
               </button>
@@ -613,13 +624,13 @@ const TeamDetailPage = () => {
         </div>
       )}
 
-      {/* Input file caché pour l'import */}
+      {/* Input caché pour l'import de fichier */}
       <input
         type="file"
-        accept=".xlsx,.xls,.csv"
         ref={fileInputRef}
-        style={{ display: 'none' }}
         onChange={handleFileChange}
+        accept=".xlsx,.xls"
+        className="hidden"
       />
     </div>
   );

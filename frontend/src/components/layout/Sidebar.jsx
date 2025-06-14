@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import LogoSvg from "../../assets/icons/Logo.svg";
-import { HouseLine, UserCircleGear, SlidersHorizontal, Users, Volleyball } from "phosphor-react";
+import { HouseLine, UserCircleGear, SlidersHorizontal, Users, Volleyball, ChartLine } from "phosphor-react";
 import { supabase } from '../../lib/supabaseClient';
 
 const Sidebar = () => {
   const location = useLocation();
   const [teamId, setTeamId] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -25,67 +35,120 @@ const Sidebar = () => {
     fetchTeams();
   }, []);
 
-  const dynamicLinks = [
+  const navigationItems = [
     {
       to: '/home',
       icon: HouseLine,
-      label: 'Home',
-      style: (selected) => ({ size: 28, weight: selected ? "fill" : "regular" }),
+      label: 'Accueil',
+      style: (selected) => ({ size: 24, weight: selected ? "fill" : "regular" }),
     },
     {
       to: '/teams',
       icon: Users,
       label: 'Équipes',
-      style: (selected) => ({ size: 28, weight: selected ? "fill" : "regular" }),
+      style: (selected) => ({ size: 24, weight: selected ? "fill" : "regular" }),
     },
     {
       to: teamId ? `/teams/${teamId}/matches` : '#',
       icon: Volleyball,
       label: 'Matchs',
-      style: (selected) => ({ size: 28, weight: selected ? "fill" : "regular" }),
+      style: (selected) => ({ size: 24, weight: selected ? "fill" : "regular" }),
       disabled: !teamId,
+    },
+    {
+      to: '/analytics',
+      icon: ChartLine,
+      label: 'Analytics',
+      style: (selected) => ({ size: 24, weight: selected ? "fill" : "regular" }),
     },
     {
       to: '/profile',
       icon: UserCircleGear,
       label: 'Profil',
-      style: (selected) => ({ size: 28, weight: selected ? "duotone" : "regular" }),
+      style: (selected) => ({ size: 24, weight: selected ? "fill" : "regular" }),
     },
     {
       to: '/settings',
       icon: SlidersHorizontal,
       label: 'Réglages',
-      style: (selected) => ({ size: 28, weight: selected ? "duotone" : "regular" }),
+      style: (selected) => ({ size: 24, weight: selected ? "fill" : "regular" }),
+    },
+    {
+      to: '/composition',
+      icon: ChartLine,
+      label: 'Composition',
+      style: (selected) => ({ size: 24, weight: selected ? "fill" : "regular" }),
     },
   ];
 
-  return (
-    <div className="w-64 bg-white border-r border-gray-200 fixed left-0 top-0 h-full flex flex-col">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <div className="flex items-center space-x-3 h-10">
-          <img src={LogoSvg} alt="Logo" className="w-8 h-8" />
-          <span className="text-xl font-semibold text-gray-900">Smart Volley</span>
-        </div>
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full">
+      <div className="p-4">
+        <img src={LogoSvg} alt="Smart Volley" className="h-8 w-auto" />
       </div>
-      <nav className="flex-1 p-6 space-y-2">
-        {dynamicLinks.map(link => {
-          const Icon = link.icon;
-          const selected = location.pathname === link.to;
+      
+      <nav className="flex-1 px-2 py-4 space-y-1">
+        {navigationItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.to;
+          
           return (
             <Link
-              key={link.to}
-              to={link.to}
-              className={`flex items-center space-x-3 px-3 py-2 rounded-lg font-medium transition-colors duration-150 ${selected ? 'bg-blue-50 text-blue-600' : link.disabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'}`}
-              tabIndex={link.disabled ? -1 : 0}
-              aria-disabled={link.disabled}
-              onClick={e => { if (link.disabled) e.preventDefault(); }}
+              key={item.to}
+              to={item.to}
+              className={`nav-link ${isActive ? 'active' : ''} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+              onClick={(e) => item.disabled && e.preventDefault()}
             >
-              <Icon {...link.style(selected)} />
-              <span>{link.label}</span>
+              <Icon {...item.style(isActive)} />
+              <span className="text-sm font-medium">{item.label}</span>
             </Link>
           );
         })}
       </nav>
+
+      <div className="p-4 border-t border-neutral-200 dark:border-neutral-700">
+        <button
+          onClick={() => document.documentElement.classList.toggle('dark')}
+          className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-neutral-600 dark:text-neutral-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg transition-colors"
+        >
+          <span className="dark:hidden">🌙</span>
+          <span className="hidden dark:inline">☀️</span>
+          <span>Mode {document.documentElement.classList.contains('dark') ? 'clair' : 'sombre'}</span>
+        </button>
+      </div>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-700">
+        <div className="flex justify-around items-center h-16">
+          {navigationItems.slice(0, 4).map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.to;
+            
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`flex flex-col items-center justify-center flex-1 h-full ${
+                  isActive ? 'text-primary-600 dark:text-primary-400' : 'text-neutral-600 dark:text-neutral-300'
+                }`}
+                onClick={(e) => item.disabled && e.preventDefault()}
+              >
+                <Icon {...item.style(isActive)} />
+                <span className="text-xs mt-1">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-y-0 left-0 w-64 bg-white dark:bg-neutral-800 border-r border-neutral-200 dark:border-neutral-700">
+      <SidebarContent />
     </div>
   );
 };
