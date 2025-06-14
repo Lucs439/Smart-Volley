@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
 const TeamForm = ({ onTeamCreated }) => {
@@ -13,6 +13,8 @@ const TeamForm = ({ onTeamCreated }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [userTeams, setUserTeams] = useState([]);
+  const [selectedTeamId, setSelectedTeamId] = useState('');
 
   const federations = [
     'FFVB',
@@ -55,6 +57,43 @@ const TeamForm = ({ onTeamCreated }) => {
     'Féminin',
     'Mixte'
   ];
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data, error } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('coach_id', user.id)
+        .order('created_at', { ascending: false });
+      if (!error && data) setUserTeams(data);
+    };
+    fetchTeams();
+  }, []);
+
+  const handleSelectTeam = (e) => {
+    const teamId = e.target.value;
+    setSelectedTeamId(teamId);
+    if (!teamId) {
+      setFormData({
+        name: '', federation: '', level: '', category: '', gender: '', season: '2024-2025', description: ''
+      });
+      return;
+    }
+    const team = userTeams.find(t => t.id === teamId);
+    if (team) {
+      setFormData({
+        name: team.name || '',
+        federation: team.federation || '',
+        level: team.level || '',
+        category: team.category || '',
+        gender: team.gender || '',
+        season: team.season || '2024-2025',
+        description: team.description || ''
+      });
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -116,6 +155,23 @@ const TeamForm = ({ onTeamCreated }) => {
 
   return (
     <div className="space-y-6">
+      {/* Dropdown de sélection d'équipe existante */}
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-3">
+          Sélectionner une équipe existante
+        </label>
+        <select
+          value={selectedTeamId}
+          onChange={handleSelectTeam}
+          className="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl text-gray-900 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200"
+        >
+          <option value="">Créer une nouvelle équipe</option>
+          {userTeams.map(team => (
+            <option key={team.id} value={team.id}>{team.name}</option>
+          ))}
+        </select>
+      </div>
+
       {error && (
         <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
           <div className="flex">

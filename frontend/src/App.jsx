@@ -17,6 +17,9 @@ import LimitModal from './components/modals/LimitModal';
 import TeamForm from './components/TeamForm';
 import TeamPage from './components/team/TeamPage';
 import TeamDetailPage from './components/team/TeamDetailPage';
+import MatchPage from './pages/MatchPage';
+import MatchNewPage from './pages/MatchNewPage';
+import MatchSetupPage from './pages/MatchSetupPage';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -31,14 +34,7 @@ const PrivateRoute = ({ children }) => {
     return <Navigate to="/welcome" />;
   }
 
-  return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        {children}
-      </main>
-    </div>
-  );
+  return children;
 };
 
 const App = () => {
@@ -150,147 +146,36 @@ const App = () => {
         setUploadStatus(`❌ Erreur: ${result.detail || 'Erreur inconnue'}`);
       }
     } catch (error) {
-      setUploadStatus(`❌ Erreur de connexion: ${error.message}`);
+      setUploadStatus('❌ Erreur: Erreur lors de la mise en ligne');
+    } finally {
+      setIsUploading(false);
     }
-
-    setIsUploading(false);
-  };
-
-  const updateTeamName = (team, name) => {
-    setTeamConfig(prev => ({
-      ...prev,
-      [team]: { ...prev[team], name }
-    }));
-  };
-
-  const updateTeamColor = (team, color) => {
-    setTeamConfig(prev => ({
-      ...prev,
-      [team]: { ...prev[team], color }
-    }));
-  };
-
-  const updatePlayerName = (team, playerIndex, name) => {
-    setTeamConfig(prev => ({
-      ...prev,
-      [team]: {
-        ...prev[team],
-        players: prev[team].players.map((player, idx) => 
-          idx === playerIndex ? { ...player, name } : player
-        )
-      }
-    }));
-  };
-
-  const updatePlayerNumber = (team, playerIndex, number) => {
-    setTeamConfig(prev => ({
-      ...prev,
-      [team]: {
-        ...prev[team],
-        players: prev[team].players.map((player, idx) => 
-          idx === playerIndex ? { ...player, number: parseInt(number) || 0 } : player
-        )
-      }
-    }));
-  };
-
-  const saveConfiguration = () => {
-    const teamAValid = teamConfig.teamA.players.every(player => player.name.trim() !== '');
-    const teamBValid = teamConfig.teamB.players.every(player => player.name.trim() !== '');
-    
-    if (!teamAValid || !teamBValid) {
-      alert('Veuillez renseigner le nom de tous les joueurs');
-      return;
-    }
-    
-    setIsConfigured(true);
-    setShowConfigModal(false);
-  };
-
-  const generateRandomName = () => {
-    const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-    const randomLetter = letters[Math.floor(Math.random() * letters.length)];
-    return `Monsieur ${randomLetter}`;
-  };
-
-  const generateTeamNames = (team) => {
-    setTeamConfig(prev => ({
-      ...prev,
-      [team]: {
-        ...prev[team],
-        players: prev[team].players.map(player => ({
-          ...player,
-          name: generateRandomName()
-        }))
-      }
-    }));
   };
 
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          <Route path="/welcome" element={<WelcomePage />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route
-            path="/home"
-            element={
-              <PrivateRoute>
-                <HomePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <ProfilePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/teams"
-            element={
-              <PrivateRoute>
-                <TeamPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/teams/:teamId"
-            element={
-              <PrivateRoute>
-                <TeamDetailPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/team/create"
-            element={
-              <PrivateRoute>
-                <TeamForm />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/test"
-            element={
-              <PrivateRoute>
-                <AuthTest />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <PrivateRoute>
-                <SettingsPage />
-              </PrivateRoute>
-            }
-          />
-          <Route path="/" element={<Navigate to="/home" />} />
-        </Routes>
+        <div className="flex h-screen">
+          <Sidebar />
+          <main className="flex-1 overflow-y-auto pl-64">
+            <Routes>
+              <Route path="/welcome" element={<WelcomePage />} />
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/register" element={<RegisterForm />} />
+              <Route path="/home" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+              <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+              <Route path="/teams" element={<PrivateRoute><TeamPage /></PrivateRoute>} />
+              <Route path="/teams/:teamId" element={<PrivateRoute><TeamDetailPage /></PrivateRoute>} />
+              <Route path="/teams/:teamId/matches" element={<PrivateRoute><MatchPage /></PrivateRoute>} />
+              <Route path="/teams/:teamId/matches/new" element={<PrivateRoute><MatchNewPage /></PrivateRoute>} />
+              <Route path="/team/create" element={<PrivateRoute><TeamForm /></PrivateRoute>} />
+              <Route path="/test" element={<PrivateRoute><AuthTest /></PrivateRoute>} />
+              <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
+              <Route path="/matches/:matchId/setup" element={<PrivateRoute><MatchSetupPage /></PrivateRoute>} />
+              <Route path="/" element={<Navigate to="/home" />} />
+            </Routes>
+          </main>
+        </div>
       </Router>
     </AuthProvider>
   );

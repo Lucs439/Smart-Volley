@@ -1,0 +1,6 @@
+2025-06-14 16:29:06 info: Logger initialisé avec succès
+2025-06-14 16:29:06 info: Logger initialisé avec succès
+2025-06-14 16:29:06 info: 🚀 Serveur démarré sur le port 3001 en mode development
+2025-06-14 16:29:06 info: 📍 http://localhost:3001
+2025-06-14 16:29:06 info: 🏥 Health check: http://localhost:3001/health
+2025-06-14 16:29:06 error: ❌ Échec de l'initialisation de la base de données

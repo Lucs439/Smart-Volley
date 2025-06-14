@@ -6,13 +6,11 @@ const rateLimit = require('express-rate-limit');
 const config = require('./src/config/config');
 const logger = require('./src/utils/logger');
 const errorHandler = require('./src/middleware/errorHandler');
-const { initDatabase } = require('./src/models');
+const supabase = require('./src/config/supabase');
 
 // Import des routes
 const authRoutes = require('./src/routes/auth.routes.js');
-const petRoutes = require('./src/routes/pets');
-const metricsRoutes = require('./src/routes/metrics');
-const userRoutes = require('./src/routes/users');
+const analysisRoutes = require('./src/routes/analysis.routes.js');
 
 // Middlewares globaux
 const limiter = rateLimit({
@@ -36,18 +34,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// Initialisation de la base de données
+// Test de connexion Supabase
 (async () => {
   try {
-    const dbInitialized = await initDatabase();
-    if (dbInitialized) {
-      logger.info('✅ Base de données initialisée avec succès');
-    } else {
-      logger.error('❌ Échec de l\'initialisation de la base de données');
-      process.exit(1);
-    }
+    const { data, error } = await supabase.from('users').select('count').limit(1);
+    if (error) throw error;
+    logger.info('✅ Connexion à Supabase établie avec succès');
   } catch (error) {
-    logger.error('❌ Erreur lors de l\'initialisation de la base de données:', error);
+    logger.error('❌ Erreur de connexion à Supabase:', error);
     process.exit(1);
   }
 })();
@@ -55,14 +49,12 @@ app.use((req, res, next) => {
 // Routes de base
 app.get('/', (req, res) => {
   res.json({
-    message: 'Bienvenue sur l\'API PAWW! 🐾',
+    message: 'Bienvenue sur l\'API Smart Volley! 🏐',
     version: '1.0.0',
     status: 'active',
     endpoints: {
       auth: '/api/auth',
-      users: '/api/users',
-      pets: '/api/pets',
-      metrics: '/api/metrics'
+      analysis: '/api/analysis'
     }
   });
 });
@@ -98,9 +90,7 @@ app.get('/health', (req, res) => {
 
 // Routes API
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/pets', petRoutes);
-app.use('/api/metrics', metricsRoutes);
+app.use('/api/analysis', analysisRoutes);
 
 // Route 404
 app.use('*', (req, res) => {

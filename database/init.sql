@@ -446,4 +446,75 @@ CREATE INDEX idx_players_team_id ON players(team_id);
 CREATE INDEX idx_players_created_by ON players(created_by);
 
 -- Trigger pour updated_at
-CREATE TRIGGER update_players_updated_at BEFORE UPDATE ON players FOR EACH ROW EXECUTE FUNCTION update_updated_at_column(); 
+CREATE TRIGGER update_players_updated_at BEFORE UPDATE ON players FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Table des matchs
+CREATE TABLE matches (
+    id SERIAL PRIMARY KEY,
+    team_id INTEGER REFERENCES teams(id) ON DELETE CASCADE,
+    opponent_name VARCHAR(100) NOT NULL,
+    match_date TIMESTAMP NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    is_home BOOLEAN DEFAULT TRUE,
+    status VARCHAR(20) DEFAULT 'scheduled', -- scheduled, in_progress, completed, cancelled
+    score_team INTEGER DEFAULT 0,
+    score_opponent INTEGER DEFAULT 0,
+    created_by INTEGER REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table des compositions d'équipe pour un match
+CREATE TABLE match_lineups (
+    id SERIAL PRIMARY KEY,
+    match_id INTEGER REFERENCES matches(id) ON DELETE CASCADE,
+    player_id INTEGER REFERENCES players(id) ON DELETE CASCADE,
+    position INTEGER CHECK (position BETWEEN 1 AND 6), -- Position sur le terrain (1-6)
+    is_starter BOOLEAN DEFAULT TRUE, -- Titulaire ou remplaçant
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(match_id, player_id)
+);
+
+-- Table des statistiques des joueurs pendant un match
+CREATE TABLE match_player_stats (
+    id SERIAL PRIMARY KEY,
+    match_id INTEGER REFERENCES matches(id) ON DELETE CASCADE,
+    player_id INTEGER REFERENCES players(id) ON DELETE CASCADE,
+    set_number INTEGER NOT NULL, -- Numéro du set
+    
+    -- Statistiques d'attaque
+    attack_success INTEGER DEFAULT 0,
+    attack_error INTEGER DEFAULT 0,
+    
+    -- Statistiques de réception
+    reception_success INTEGER DEFAULT 0,
+    reception_error INTEGER DEFAULT 0,
+    
+    -- Statistiques de service
+    service_success INTEGER DEFAULT 0,
+    service_error INTEGER DEFAULT 0,
+    
+    -- Statistiques de bloc
+    block_success INTEGER DEFAULT 0,
+    block_error INTEGER DEFAULT 0,
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(match_id, player_id, set_number)
+);
+
+-- Index pour les nouvelles tables
+CREATE INDEX idx_matches_team_id ON matches(team_id);
+CREATE INDEX idx_matches_match_date ON matches(match_date);
+CREATE INDEX idx_matches_status ON matches(status);
+
+CREATE INDEX idx_match_lineups_match_id ON match_lineups(match_id);
+CREATE INDEX idx_match_lineups_player_id ON match_lineups(player_id);
+
+CREATE INDEX idx_match_player_stats_match_id ON match_player_stats(match_id);
+CREATE INDEX idx_match_player_stats_player_id ON match_player_stats(player_id);
+CREATE INDEX idx_match_player_stats_set ON match_player_stats(match_id, set_number);
+
+-- Triggers pour updated_at
+CREATE TRIGGER update_matches_updated_at BEFORE UPDATE ON matches FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_match_player_stats_updated_at BEFORE UPDATE ON match_player_stats FOR EACH ROW EXECUTE FUNCTION update_updated_at_column(); 
