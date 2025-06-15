@@ -30,7 +30,8 @@ const PlayerForm = ({ onSubmit, initialData, onCancel }) => {
     { value: 'attaquant_receptionneur', label: 'Attaquant réceptionneur' },
     { value: 'passeur', label: 'Passeur' },
     { value: 'pointu', label: 'Pointu' },
-    { value: 'central', label: 'Central' }
+    { value: 'central', label: 'Central' },
+    { value: 'loisir', label: 'Loisir' }
   ];
 
   const statuses = [
@@ -44,7 +45,8 @@ const PlayerForm = ({ onSubmit, initialData, onCancel }) => {
     { value: 'debutant', label: 'Débutant' },
     { value: 'intermediaire', label: 'Intermédiaire' },
     { value: 'confirme', label: 'Confirmé' },
-    { value: 'expert', label: 'Expert' }
+    { value: 'expert', label: 'Expert' },
+    { value: 'loisir', label: 'Loisir' }
   ];
 
   useEffect(() => {
@@ -99,8 +101,12 @@ const PlayerForm = ({ onSubmit, initialData, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.first_name || !formData.last_name || !formData.position) {
-      setError('Veuillez remplir tous les champs obligatoires');
+    if (!formData.first_name) {
+      setError('Le prénom est obligatoire');
+      return;
+    }
+    if ((formData.level?.toLowerCase() !== 'loisir' && !formData.position)) {
+      setError('Le poste est obligatoire sauf pour le niveau Loisir');
       return;
     }
 
@@ -138,7 +144,6 @@ const PlayerForm = ({ onSubmit, initialData, onCancel }) => {
         birth_date: formData.birth_date || null,
         photo_url: photoUrl,
         position: formData.position,
-        secondary_position: formData.secondary_position || null,
         status: formData.status,
         level: formData.level || null,
         phone: formData.phone || null,
@@ -201,11 +206,12 @@ const PlayerForm = ({ onSubmit, initialData, onCancel }) => {
               onChange={handleChange}
               className="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl text-gray-900 placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200"
               placeholder="Prénom du joueur"
+              required
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Nom *
+              Nom de famille
             </label>
             <input
               type="text"
@@ -256,22 +262,6 @@ const PlayerForm = ({ onSubmit, initialData, onCancel }) => {
             <select
               name="position"
               value={formData.position}
-              onChange={handleChange}
-              className="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl text-gray-900 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200"
-            >
-              <option value="">Choisir</option>
-              {positions.map(pos => (
-                <option key={pos.value} value={pos.value}>{pos.label}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Poste secondaire
-            </label>
-            <select
-              name="secondary_position"
-              value={formData.secondary_position}
               onChange={handleChange}
               className="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl text-gray-900 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200"
             >

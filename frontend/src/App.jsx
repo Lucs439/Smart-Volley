@@ -21,6 +21,7 @@ import MatchPage from './pages/MatchPage';
 import MatchNewPage from './pages/MatchNewPage';
 import MatchSetupPage from './pages/MatchSetupPage';
 import CompositionPage from './pages/CompositionPage';
+import CompositionNewPage from './pages/CompositionNewPage';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -174,6 +175,7 @@ const App = () => {
               <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
               <Route path="/matches/:matchId/setup" element={<PrivateRoute><MatchSetupPage /></PrivateRoute>} />
               <Route path="/composition" element={<PrivateRoute><CompositionPage /></PrivateRoute>} />
+              <Route path="/composition/new" element={<PrivateRoute><CompositionNewPage /></PrivateRoute>} />
               <Route path="/" element={<Navigate to="/home" />} />
             </Routes>
           </main>

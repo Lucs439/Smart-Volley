@@ -433,14 +433,25 @@ const TeamDetailPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* En-tête de l'équipe */}
+      {/* Header avec flèche de retour et boutons */}
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">{team?.name}</h1>
-            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-              {team?.description || 'Aucune description'}
-            </p>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate('/teams')}
+              className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              title="Retour à la liste des équipes"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+            <div>
+              <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">{team?.name}</h1>
+              <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+                {team?.description || 'Aucune description'}
+              </p>
+            </div>
           </div>
           <div className="flex flex-wrap gap-3">
             <button

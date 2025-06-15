@@ -155,23 +155,6 @@ const TeamForm = ({ onTeamCreated }) => {
 
   return (
     <div className="space-y-6">
-      {/* Dropdown de sélection d'équipe existante */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-3">
-          Sélectionner une équipe existante
-        </label>
-        <select
-          value={selectedTeamId}
-          onChange={handleSelectTeam}
-          className="w-full px-4 py-3 bg-gray-50 border-0 rounded-xl text-gray-900 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200"
-        >
-          <option value="">Créer une nouvelle équipe</option>
-          {userTeams.map(team => (
-            <option key={team.id} value={team.id}>{team.name}</option>
-          ))}
-        </select>
-      </div>
-
       {error && (
         <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
           <div className="flex">
