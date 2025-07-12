@@ -5,9 +5,9 @@ const sequelize = new Sequelize({
   dialect: 'postgres',
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'paww',
-  username: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
+  database: process.env.DB_NAME || 'smart_volley_db',
+  username: process.env.DB_USER || 'smart_volley_user',
+  password: process.env.DB_PASSWORD || 'smart_volley_password',
   logging: (msg) => logger.debug(msg),
   define: {
     underscored: true,

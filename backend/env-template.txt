@@ -1,0 +1,19 @@
+# Configuration JWT
+JWT_SECRET=smart_volley_jwt_secret_2024
+
+# Configuration Bcrypt
+BCRYPT_ROUNDS=12
+
+# Configuration du serveur
+PORT=3001
+NODE_ENV=development
+
+# Configuration de la base de données
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=smart_volley_db
+DB_USER=smart_volley_user
+DB_PASSWORD=smart_volley_password
+
+# Configuration des logs
+LOG_LEVEL=info 

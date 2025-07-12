@@ -10,31 +10,22 @@ const schemas = {
         'any.required': 'L\'email est requis'
       }),
     password: Joi.string()
-      .min(8)
+      .min(4)
       .max(72)
-      .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
       .required()
       .messages({
-        'string.min': 'Le mot de passe doit contenir au moins 8 caractères',
+        'string.min': 'Le mot de passe doit contenir au moins 4 caractères',
         'string.max': 'Le mot de passe ne peut pas dépasser 72 caractères',
-        'string.pattern.base': 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial',
         'any.required': 'Le mot de passe est requis'
       }),
     confirmPassword: Joi.string()
       .valid(Joi.ref('password'))
-      .required()
-      .messages({
-        'any.only': 'Les mots de passe ne correspondent pas',
-        'any.required': 'La confirmation du mot de passe est requise'
-      }),
-    firstName: Joi.string()
-      .min(2)
-      .max(50)
       .optional()
       .messages({
-        'string.min': 'Le prénom doit contenir au moins 2 caractères',
-        'string.max': 'Le prénom ne peut pas dépasser 50 caractères'
+        'any.only': 'Les mots de passe ne correspondent pas'
       }),
+    firstName: Joi.string()
+      .optional(),
     lastName: Joi.string()
       .min(2)
       .max(50)

@@ -1,14 +1,13 @@
 const { Sequelize } = require('sequelize');
-const supabase = require('../config/supabase');
 
 // Configuration de la base de données
 const sequelize = new Sequelize({
   dialect: 'postgres',
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'paww_db',
-  username: process.env.DB_USER || 'paww_user',
-  password: process.env.DB_PASSWORD || 'paww_password',
+  database: process.env.DB_NAME || 'smart_volley_db',
+  username: process.env.DB_USER || 'smart_volley_user',
+  password: process.env.DB_PASSWORD || 'smart_volley_password',
   logging: console.log,
   pool: {
     max: 5,
@@ -138,11 +137,9 @@ const initDatabase = async () => {
   try {
     await sequelize.authenticate();
     console.log('✅ Connexion PostgreSQL établie');
-    
     // Synchroniser les modèles (crée les tables si elles n'existent pas)
     await sequelize.sync({ alter: true });
     console.log('✅ Modèles synchronisés');
-    
     return true;
   } catch (error) {
     console.error('❌ Erreur base de données:', error);
@@ -150,164 +147,10 @@ const initDatabase = async () => {
   }
 };
 
-const models = {
-  // Modèle User
-  User: {
-    async findById(id) {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', id)
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-
-    async findByEmail(email) {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', email)
-        .single();
-      
-      if (error && error.code !== 'PGRST116') throw error;
-      return data;
-    },
-
-    async create(userData) {
-      const { data, error } = await supabase
-        .from('users')
-        .insert([userData])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-
-    async update(id, userData) {
-      const { data, error } = await supabase
-        .from('users')
-        .update(userData)
-        .eq('id', id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    }
-  },
-
-  // Modèle Team
-  Team: {
-    async findById(id) {
-      const { data, error } = await supabase
-        .from('team')
-        .select('*, players(*)')
-        .eq('id', id)
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-
-    async findByUserId(userId) {
-      const { data, error } = await supabase
-        .from('team')
-        .select('*, players(*)')
-        .eq('user_id', userId);
-      
-      if (error) throw error;
-      return data;
-    },
-
-    async create(teamData) {
-      const { data, error } = await supabase
-        .from('team')
-        .insert([teamData])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-
-    async update(id, teamData) {
-      const { data, error } = await supabase
-        .from('team')
-        .update(teamData)
-        .eq('id', id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    }
-  },
-
-  // Modèle Player
-  Player: {
-    async findById(id) {
-      const { data, error } = await supabase
-        .from('joueurs')
-        .select('*, team(*)')
-        .eq('id', id)
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-
-    async findByTeamId(teamId) {
-      const { data, error } = await supabase
-        .from('joueurs')
-        .select('*')
-        .eq('team_id', teamId);
-      
-      if (error) throw error;
-      return data;
-    },
-
-    async create(playerData) {
-      const { data, error } = await supabase
-        .from('joueurs')
-        .insert([playerData])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-
-    async update(id, playerData) {
-      const { data, error } = await supabase
-        .from('joueurs')
-        .update(playerData)
-        .eq('id', id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-
-    async delete(id) {
-      const { error } = await supabase
-        .from('joueurs')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
-      return true;
-    }
-  }
-};
-
+// Export direct des modèles Sequelize et de la fonction d'init
 module.exports = {
   sequelize,
   User,
   VerificationCode,
-  initDatabase,
-  models
+  initDatabase
 }; 

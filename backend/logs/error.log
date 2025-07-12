@@ -1,1 +1,2 @@
-2025-06-14 16:29:06 error: ❌ Échec de l'initialisation de la base de données
+2025-07-12 16:45:02 error: ❌ Exception non capturée: logger.startup is not a function
+2025-07-12 17:17:24 error: ❌ Impossible de démarrer le serveur sans connexion à la base de données

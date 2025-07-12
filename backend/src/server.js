@@ -1,15 +1,15 @@
 require('dotenv').config();
 const app = require('./app');
 const logger = require('./utils/logger');
-const { connectDatabase } = require('./utils/database');
+const { initDatabase } = require('./models');
 
 const PORT = process.env.PORT || 3001;
 const ENV = process.env.NODE_ENV || 'development';
 
 const startServer = async () => {
   try {
-    // Connexion à la base de données
-    const dbConnected = await connectDatabase();
+    // Connexion à la base de données et initialisation des modèles
+    const dbConnected = await initDatabase();
     if (!dbConnected) {
       logger.error('❌ Impossible de démarrer le serveur sans connexion à la base de données');
       process.exit(1);
@@ -17,7 +17,7 @@ const startServer = async () => {
 
     // Démarrage du serveur
     app.listen(PORT, () => {
-      logger.startup(`Serveur démarré sur le port ${PORT} en mode ${ENV}`);
+      logger.info(`Serveur démarré sur le port ${PORT} en mode ${ENV}`);
       logger.info(`📍 http://localhost:${PORT}`);
       logger.info(`🏥 Health check: http://localhost:${PORT}/health`);
     });

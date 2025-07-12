@@ -6,7 +6,7 @@ const rateLimit = require('express-rate-limit');
 const config = require('./src/config/config');
 const logger = require('./src/utils/logger');
 const errorHandler = require('./src/middleware/errorHandler');
-const supabase = require('./src/config/supabase');
+const { testConnection } = require('./src/config/database');
 
 // Import des routes
 const authRoutes = require('./src/routes/auth.routes.js');
@@ -34,15 +34,18 @@ app.use((req, res, next) => {
   next();
 });
 
-// Test de connexion Supabase
+// Test de connexion PostgreSQL
 (async () => {
   try {
-    const { data, error } = await supabase.from('users').select('count').limit(1);
-    if (error) throw error;
-    logger.info('✅ Connexion à Supabase établie avec succès');
+    const isConnected = await testConnection();
+    if (isConnected) {
+      logger.info('✅ Connexion à PostgreSQL établie avec succès');
+    } else {
+      logger.warn('⚠️ Le serveur démarre sans connexion PostgreSQL');
+    }
   } catch (error) {
-    logger.error('❌ Erreur de connexion à Supabase:', error);
-    process.exit(1);
+    logger.error('❌ Erreur de connexion à PostgreSQL:', error);
+    logger.warn('⚠️ Le serveur démarre sans connexion PostgreSQL');
   }
 })();
 

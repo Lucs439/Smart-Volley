@@ -1,6 +1,95 @@
-2025-06-14 16:29:06 info: Logger initialisé avec succès
-2025-06-14 16:29:06 info: Logger initialisé avec succès
-2025-06-14 16:29:06 info: 🚀 Serveur démarré sur le port 3001 en mode development
-2025-06-14 16:29:06 info: 📍 http://localhost:3001
-2025-06-14 16:29:06 info: 🏥 Health check: http://localhost:3001/health
-2025-06-14 16:29:06 error: ❌ Échec de l'initialisation de la base de données
+2025-07-12 16:45:01 info: Logger initialisé avec succès
+2025-07-12 16:45:01 info: Logger initialisé avec succès
+2025-07-12 16:45:02 error: ❌ Exception non capturée: logger.startup is not a function
+2025-07-12 16:47:55 info: Logger initialisé avec succès
+2025-07-12 16:47:55 info: Logger initialisé avec succès
+2025-07-12 16:47:56 info: Serveur démarré sur le port 3001 en mode development
+2025-07-12 16:47:56 info: 📍 http://localhost:3001
+2025-07-12 16:47:56 info: 🏥 Health check: http://localhost:3001/health
+2025-07-12 17:17:23 info: Logger initialisé avec succès
+2025-07-12 17:17:23 info: Logger initialisé avec succès
+2025-07-12 17:17:24 error: ❌ Impossible de démarrer le serveur sans connexion à la base de données
+2025-07-12 17:23:36 info: Logger initialisé avec succès
+2025-07-12 17:23:36 info: Logger initialisé avec succès
+2025-07-12 17:23:37 info: Serveur démarré sur le port 3001 en mode development
+2025-07-12 17:23:37 info: 📍 http://localhost:3001
+2025-07-12 17:23:37 info: 🏥 Health check: http://localhost:3001/health
+2025-07-12 17:24:42 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:24:42 warn: ❌ Erreurs de validation:
+2025-07-12 17:24:42 warn: POST /api/auth/register - Status: 400 - 13ms
+2025-07-12 17:30:10 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:30:10 warn: ❌ Erreurs de validation:
+2025-07-12 17:30:10 warn: POST /api/auth/register - Status: 400 - 12ms
+2025-07-12 17:30:10 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:30:10 warn: ❌ Erreurs de validation:
+2025-07-12 17:30:10 warn: POST /api/auth/register - Status: 400 - 8ms
+2025-07-12 17:30:11 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:30:11 warn: ❌ Erreurs de validation:
+2025-07-12 17:30:11 warn: POST /api/auth/register - Status: 400 - 6ms
+2025-07-12 17:30:25 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:30:25 warn: ❌ Erreurs de validation:
+2025-07-12 17:30:25 warn: POST /api/auth/register - Status: 400 - 9ms
+2025-07-12 17:32:03 info: Logger initialisé avec succès
+2025-07-12 17:32:03 info: Logger initialisé avec succès
+2025-07-12 17:32:04 info: Serveur démarré sur le port 3001 en mode development
+2025-07-12 17:32:04 info: 📍 http://localhost:3001
+2025-07-12 17:32:04 info: 🏥 Health check: http://localhost:3001/health
+2025-07-12 17:32:45 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:32:45 warn: ❌ Erreurs de validation:
+2025-07-12 17:32:45 warn: POST /api/auth/register - Status: 400 - 3ms
+2025-07-12 17:34:32 info: Logger initialisé avec succès
+2025-07-12 17:34:32 info: Logger initialisé avec succès
+2025-07-12 17:34:33 info: Serveur démarré sur le port 3001 en mode development
+2025-07-12 17:34:33 info: 📍 http://localhost:3001
+2025-07-12 17:34:33 info: 🏥 Health check: http://localhost:3001/health
+2025-07-12 17:34:50 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:34:50 warn: ❌ Erreurs de validation:
+2025-07-12 17:34:50 warn: POST /api/auth/register - Status: 400 - 4ms
+2025-07-12 17:36:45 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:36:45 warn: ❌ Erreurs de validation:
+2025-07-12 17:36:45 warn: POST /api/auth/register - Status: 400 - 5ms
+2025-07-12 17:38:09 info: Logger initialisé avec succès
+2025-07-12 17:38:09 info: Logger initialisé avec succès
+2025-07-12 17:38:09 info: Serveur démarré sur le port 3001 en mode development
+2025-07-12 17:38:09 info: 📍 http://localhost:3001
+2025-07-12 17:38:09 info: 🏥 Health check: http://localhost:3001/health
+2025-07-12 17:42:58 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:42:58 warn: ❌ Erreurs de validation:
+2025-07-12 17:42:58 warn: POST /api/auth/register - Status: 400 - 15ms
+2025-07-12 17:43:41 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:43:41 warn: ❌ Erreurs de validation:
+2025-07-12 17:43:41 warn: POST /api/auth/register - Status: 400 - 3ms
+2025-07-12 17:43:54 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:43:54 info: 📝 Tentative d'inscription pour test@test.com
+2025-07-12 17:43:55 info: ✅ Utilisateur créé avec succès: ID 1, email test@test.com
+2025-07-12 17:43:55 info: 📧 Code de vérification généré pour test@test.com: 358211
+2025-07-12 17:43:55 info: POST /api/auth/register - Status: 201 - 470ms
+2025-07-12 17:44:24 info: POST /api/auth/login - IP: ::1
+2025-07-12 17:44:24 info: 🔐 Tentative de connexion pour test@test.com
+2025-07-12 17:44:24 info: ✅ Utilisateur trouvé - ID: 1, Email: test@test.com
+2025-07-12 17:44:24 info: 🎉 Connexion réussie pour test@test.com
+2025-07-12 17:44:24 info: POST /api/auth/login - Status: 200 - 485ms
+2025-07-12 17:45:26 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:45:26 warn: ❌ Erreurs de validation:
+2025-07-12 17:45:26 warn: POST /api/auth/register - Status: 400 - 3ms
+2025-07-12 17:45:40 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:45:40 warn: ❌ Erreurs de validation:
+2025-07-12 17:45:40 warn: POST /api/auth/register - Status: 400 - 4ms
+2025-07-12 17:45:41 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:45:41 warn: ❌ Erreurs de validation:
+2025-07-12 17:45:41 warn: POST /api/auth/register - Status: 400 - 14ms
+2025-07-12 17:45:41 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:45:41 warn: ❌ Erreurs de validation:
+2025-07-12 17:45:41 warn: POST /api/auth/register - Status: 400 - 4ms
+2025-07-12 17:45:41 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:45:41 warn: ❌ Erreurs de validation:
+2025-07-12 17:45:41 warn: POST /api/auth/register - Status: 400 - 4ms
+2025-07-12 17:45:42 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:45:42 warn: ❌ Erreurs de validation:
+2025-07-12 17:45:42 warn: POST /api/auth/register - Status: 400 - 3ms
+2025-07-12 17:45:42 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:45:42 warn: ❌ Erreurs de validation:
+2025-07-12 17:45:42 warn: POST /api/auth/register - Status: 400 - 3ms
+2025-07-12 17:45:42 info: POST /api/auth/register - IP: ::1
+2025-07-12 17:45:42 warn: ❌ Erreurs de validation:
+2025-07-12 17:45:42 warn: POST /api/auth/register - Status: 400 - 8ms
