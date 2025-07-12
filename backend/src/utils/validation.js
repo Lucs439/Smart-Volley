@@ -2,31 +2,11 @@ const Joi = require('joi');
 
 const schemas = {
   register: Joi.object({
-    email: Joi.string()
-      .email()
-      .required()
-      .messages({
-        'string.email': 'Email invalide',
-        'any.required': 'Email requis'
-      }),
-    password: Joi.string()
-      .min(8)
-      .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-      .required()
-      .messages({
-        'string.min': 'Le mot de passe doit contenir au moins 8 caractères',
-        'string.pattern.base': 'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre',
-        'any.required': 'Mot de passe requis'
-      }),
-    confirmPassword: Joi.string()
-      .valid(Joi.ref('password'))
-      .required()
-      .messages({
-        'any.only': 'Les mots de passe ne correspondent pas',
-        'any.required': 'Confirmation du mot de passe requise'
-      }),
-    firstName: Joi.string().min(1).max(100).optional(),
-    lastName: Joi.string().min(1).max(100).optional()
+    email: Joi.any(),
+    password: Joi.any(),
+    confirmPassword: Joi.any(),
+    firstName: Joi.any(),
+    lastName: Joi.any()
   }),
 
   login: Joi.object({
